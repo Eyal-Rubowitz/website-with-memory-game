@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>My App</title>
+  <link rel="stylesheet" href="css/game.css" />
+</head>
+
+<body>
+
+  <div class="header">
+    <img src="img/layout/logo.png">
+    <h1>Memory Monsters</h1>
+  </div>
+
+  <div class="card" data-card="1" onclick="cardClicked(this)">
+    <img src="img/cards/1.png">
+    <img class="back" src="img/cards/back.png">
+  </div>
+  <div class="card" data-card="7" onclick="cardClicked(this)">
+    <img src="img/cards/7.png">
+    <img class="back" src="img/cards/back.png">
+  </div>
+  <div class="card" data-card="1" onclick="cardClicked(this)">
+    <img src="img/cards/1.png">
+    <img class="back" src="img/cards/back.png">
+  </div>
+  <div class="card" data-card="7" onclick="cardClicked(this)">
+    <img src="img/cards/7.png">
+    <img class="back" src="img/cards/back.png">
+  </div>
+  <div class="card" data-card="5" onclick="cardClicked(this)">
+    <img src="img/cards/5.png">
+    <img class="back" src="img/cards/back.png">
+  </div>
+  <div class="card" data-card="5" onclick="cardClicked(this)">
+    <img src="img/cards/5.png">
+    <img class="back" src="img/cards/back.png">
+  </div>
+
+
+
+  <div class="timeContainer">
+    <p>
+        It's been...
+    </p>
+    <table id="countup">
+      <tr>
+        <td id="days">00</td>
+        <td id="hours">00</td>
+        <td id="minutes">00</td>
+        <td id="seconds">00</td>
+      </tr>
+      <tr>
+        <td class="timeRefDays">days</td>
+        <td class="timeRefHours">hours</td>
+        <td class="timeRefMinutes">minutes</td>
+        <td class="timeRefSeconds">second</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="paging">
+    <a href="index.html">Back to home page</a>
+  </div>
+
+  <script src="js/game.js"></script>
+</body>
+
+</html>

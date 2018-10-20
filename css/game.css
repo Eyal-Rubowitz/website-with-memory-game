@@ -1,0 +1,74 @@
+.header {
+    background-color: lightblue;
+    padding: 20px;
+    border-bottom: 10px solid darkcyan;
+    color:darkcyan;
+    font-size: 1.5em;
+    text-align: center;
+}
+
+body {
+    background-color: aquamarine;
+}
+
+.header img {
+    float:right;
+}
+
+.card {
+    background-color: rgb(1, 225, 30);
+    height: 165px;
+    width: 165px;    
+    float: left;
+    margin: 5px;
+}
+
+.card img {
+    position: absolute;
+}
+
+.flipped .back {
+    display: none;
+}
+
+.paging {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 5px;
+    width: 250px;
+    height: 50px;
+    cursor: pointer;
+    background-color: #4CAF50;
+    clear: both;
+    border: solid 3px #583295;
+}
+
+a {
+    text-decoration: none;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+#countup {
+    text-align: center;
+}
+
+/* .timeContainer {
+    position: relative;
+} */
+
+div table {
+    position: relative;
+    float: left;
+    margin-right: 0;
+    margin-left: auto;
+}
+
+#countup td {
+    padding: 10px;
+    background: #151515;
+    border-radius: 5px;
+    color: white;
+    min-width: 3rem;
+}

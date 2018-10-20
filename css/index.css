@@ -1,0 +1,85 @@
+body {
+    background-color: black;
+    background-repeat: no-repeat; 
+    background-size: auto;
+}
+
+table {
+    table-layout: fixed;
+}
+
+th {
+    width: 1000px;
+    border-bottom: dotted 3px purple; 
+    text-shadow: 6px 6px darkred;
+}
+
+h1 {
+    color: blueviolet;
+    font-family: fantasy;
+    font-size: 130px;
+}
+
+.pic {
+    width: 50%;
+    height: 8%;
+}
+
+a {
+    text-decoration: none;
+    color: blue;
+    text-shadow: 3px 3px lightgoldenrodyellow;
+}
+
+.myDetails {
+font-size: 40px;
+padding-top: 10em;
+line-height: 200px;
+}
+
+.generalDetail {
+    color: moccasin;
+    line-height: 25px;
+    font-size: 30px;
+}
+
+span {
+    font-size: 40px;
+    color: blue;
+}
+
+
+textarea {
+    resize: none;
+    width: 1300px;
+    height: 130px;
+    font-size: 18px;  
+}
+
+.footer {
+    color: orange;
+    font-size: 20px;
+}
+
+.letsPlay {
+    text-align: center;
+    align-items: center;
+    margin: 5%;
+    border-radius: 50px 25px;
+    border: dashed yellow;
+    cursor: pointer;
+}
+
+button {
+    font-size: 32px;
+    width: 200px;
+    background-color: gold;
+    
+}
+
+.letsPlay:hover .btn {
+    transition: 2s;
+    width: 400px;
+    font-size: 36px;
+    border-radius: 150px 150px;
+}
