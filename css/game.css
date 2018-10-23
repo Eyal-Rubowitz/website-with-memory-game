@@ -90,7 +90,7 @@ div table {
     display: inline-block;
 }
 
-#btnPlayAgain {
+.btnPlayAgain {
     align-content: center;
     align-items: center;
     font-size: 24px;

@@ -23,11 +23,9 @@ let isWining = false;
 let isPleyAgain = false;
 
 // get best score data from local storage
-debugger;
 let bestTime = localStorage.getItem('Best time record') || (new Date() - new Date(1856));
-// let bestTime = localStorage.removeItem('Best time record');
 
-// A condition that uses the "upTime" method when user wins
+// A condition that notify the "upTime" method when (user wins)
 // to call "timeScore" method to check the best time score.
 let isCheckScore = false;
 
@@ -44,20 +42,19 @@ let audioWrong = new Audio('sound/wrong.mp3');
 // This function is called whenever the user click a card
 function cardClicked(elCard) {
 
-    // if it's the first click of game move, start timer counting
+    // if it's the first click of game move, start timer counting...
     if (gameIsOn === false) {
-        // "onGameFirstClick" - start time counting
+        // "onGameFirstClick" - starts the time counting
         onGameFirstClick();
     }
 
     // If the user clicked an already flipped card - do nothing & return
-    // If game in proccess, the user cannot flip other cards
+    // If game in proccess, the user cannot flip other cards - so return
     if (elCard.classList.contains('flipped') || isProcessing) {
-        debugger;
         return;
     }
 
-    // Egnore clicking twice on same card
+    // Ignore clicking twice on same card
     if (elCard !== null && elPreviousCard !== null && elCard === elPreviousCard) {
         elCard = null;
         return;
@@ -80,12 +77,7 @@ function cardClicked(elCard) {
         // No match, schedule to flip them back in 1 second
         if (card1 !== card2) {
             setTimeout(function () {
-                elCard.classList.remove('flipped');
-                elPreviousCard.classList.remove('flipped');
-                audioWrong.play();
-                elPreviousCard = null;
-                elCard = null;
-                isProcessing = false;
+                flipCardBack(elPreviousCard, elCard);
             }, 1000)
         } else {
             // Yes! a match!
@@ -117,7 +109,6 @@ function restartGame() {
     flippedCouplesCount = 0;
     isWining = false;
     startingTime = null;
-    debugger;
     let textScore = bestTimeToString(bestTime);
     document.getElementById('timeRecord').textContent = textScore;
     btnPlayAgainEl.style.visibility = "hidden";
@@ -136,7 +127,7 @@ function restartGame() {
 function onPageLoaded() {
     let name = prompt("Enter your name here:")
     localStorage.setItem('userName', name);
-    debugger;
+    document.getElementById('playerName').textContent = "Hello " + name + " !";
     let textScore = bestTimeToString(bestTime);
     document.getElementById('timeRecord').textContent = textScore;
     btnPlayAgainEl.style.visibility = "hidden";
@@ -180,7 +171,6 @@ function upTime(countTo) {
         if (isCheckScore === true) {
             // If player wins the game chack if this game has the best time score
             // if it is the best time score, save it in localStorage
-            debugger;
             timeScore(difference);
             isCheckScore = false;
         }
@@ -212,7 +202,6 @@ function upTime(countTo) {
 }
 
 function timeScore(time) {
-    debugger;
     if (bestTime > time) {
         bestTime = time;
         localStorage.setItem('Best time record', bestTime);
@@ -249,4 +238,19 @@ function bestTimeToString(bestTime) {
 function revealCard(cardEl) {
     // Flip it
     cardEl.classList.add('flipped');
+}
+
+function flipCardBack(card1, card2) {
+    card1.classList.remove('flipped');
+    card2.classList.remove('flipped');
+    audioWrong.play();
+    elPreviousCard = null;
+    elCard = null;
+    isProcessing = false;
+}
+
+function updateUserName() {
+    let name = prompt("Enter your name here:")
+    localStorage.setItem('userName', name);
+    document.getElementById('playerName').textContent = "Hello " + name + " !";
 }
