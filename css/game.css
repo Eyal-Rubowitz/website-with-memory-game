@@ -42,6 +42,7 @@ body {
     background-color: #4CAF50;
     clear: both;
     border: solid 3px #583295;
+    border-radius: 5px;
 }
 
 a {
@@ -53,10 +54,6 @@ a {
 #countup {
     text-align: center;
 }
-
-/* .timeContainer {
-    position: relative;
-} */
 
 div table {
     position: relative;
@@ -71,4 +68,35 @@ div table {
     border-radius: 5px;
     color: white;
     min-width: 3rem;
+}
+
+#timeRecord {
+    font-size: 120%;
+    padding: 30px;
+    background: #151515;
+    border-radius: 5px;
+    color: gold;
+    display: inline-block;
+}
+
+#playAgainContainer {
+    margin: 20px;
+    text-align: center;
+    font-size: 100%;
+    font-weight: bold;
+    font-family: cursive;
+    border: dotted red 4px;
+    background-color: lightcoral;
+    display: inline-block;
+}
+
+#btnPlayAgain {
+    align-content: center;
+    align-items: center;
+    font-size: 24px;
+    margin: auto;
+    color: yellow;
+    background-color:black;
+    border:purple solid 3px;
+    border-radius: 5px;
 }

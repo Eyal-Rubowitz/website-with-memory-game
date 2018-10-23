@@ -1,48 +1,81 @@
+// The variables type identifier was changed from "var" to "let"
+// so the variables are accessable only in there scope
+
+// A global event handler - calls "onPageLoaded" method when html DOM object is initiate
+window.onload = onPageLoaded;
+
 // Those are global variables, they stay alive and reflect the state of the game
-var elPreviousCard = null;
-var flippedCouplesCount = 0;
+let elPreviousCard = null;
+let flippedCouplesCount = 0;
 
 // This is a constant that we dont change during the game (we mark those with CAPITAL letters)
-var TOTAL_COUPLES_COUNT = 3;
+// The variable type identifier was changed from "var" to "const" 
+// so now identifier is immutable & it can’t be reassigned.
+const TOTAL_COUPLES_COUNT = 3;
 
 // A condition to represent if payer began to play the game
-var gameIsOn = false;
+let gameIsOn = false;
 
 // game state
-var isWining = false;
+let isWining = false;
 
-var isPleyAgain = false;
+// A condition to allow two cards proccess at once only
+let isPleyAgain = false;
 
-let bestTime = new Date(1856);
+// get best score data from local storage
+debugger;
+let bestTime = localStorage.getItem('Best time record') || (new Date() - new Date(1856));
+// let bestTime = localStorage.removeItem('Best time record');
+
+// A condition that uses the "upTime" method when user wins
+// to call "timeScore" method to check the best time score.
+let isCheckScore = false;
+
+let btnPlayAgainEl = document.getElementById("playAgainContainer");
+
+// A condition to notify when two cards was revealed
+let isProcessing = false;
 
 // Load an audio files
-var audioRight = new Audio('sound/right.mp3');
-var audioWin = new Audio('sound/win.mp3');
-var audioWrong = new Audio('sound/wrong.mp3');
+let audioRight = new Audio('sound/right.mp3');
+let audioWin = new Audio('sound/win.mp3');
+let audioWrong = new Audio('sound/wrong.mp3');
 
 // This function is called whenever the user click a card
 function cardClicked(elCard) {
+
     // if it's the first click of game move, start timer counting
     if (gameIsOn === false) {
-        gameIsOn = true;
+        // "onGameFirstClick" - start time counting
         onGameFirstClick();
     }
 
-    // If the user clicked an already flipped card - do nothing and return from the function
-    if (elCard.classList.contains('flipped')) {
+    // If the user clicked an already flipped card - do nothing & return
+    // If game in proccess, the user cannot flip other cards
+    if (elCard.classList.contains('flipped') || isProcessing) {
+        debugger;
         return;
     }
 
-    // Flip it
-    elCard.classList.add('flipped');
+    // Egnore clicking twice on same card
+    if (elCard !== null && elPreviousCard !== null && elCard === elPreviousCard) {
+        elCard = null;
+        return;
+    }
 
     // This is a first card, only keep it in the global variable
     if (elPreviousCard === null) {
         elPreviousCard = elCard;
+        revealCard(elCard);
+        elCard = null;
     } else {
+        isProcessing = true;
+        revealCard(elCard);
+
         // get the data-card attribute's value from both cards
-        var card1 = elPreviousCard.getAttribute('data-card');
-        var card2 = elCard.getAttribute('data-card');
+        let card1 = elPreviousCard.getAttribute('data-card');
+        let card2 = elCard.getAttribute('data-card');
+
 
         // No match, schedule to flip them back in 1 second
         if (card1 !== card2) {
@@ -51,37 +84,31 @@ function cardClicked(elCard) {
                 elPreviousCard.classList.remove('flipped');
                 audioWrong.play();
                 elPreviousCard = null;
+                elCard = null;
+                isProcessing = false;
             }, 1000)
-
         } else {
             // Yes! a match!
             flippedCouplesCount++;
             elPreviousCard = null;
+            revealCard(elCard);
 
             // is All cards flipped?!
             if (TOTAL_COUPLES_COUNT === flippedCouplesCount) {
-                audioWin.play();
                 onWiningTheGame();
-                // setTimeout(callConfirm, 1500);
-                setTimeout(callPlayAgainConfirm, 0);
             } else {
                 // answere is right - while the game is still beeing played
                 audioRight.play();
             }
-
+            isProcessing = false;
         }
-
     }
-
-
 }
 
-function callPlayAgainConfirm() {
-    var userWantToPlay = window.confirm("Yay & Wooohoo... Congratulations you win the game !!! \n Do you like to play again ?");
-    if (userWantToPlay === true) {
-        restartGame();
-        isPleyAgain = true;
-    }
+function playAgain() {
+    gameIsOn = false;
+    restartGame();
+    isPleyAgain = true;
 }
 
 function restartGame() {
@@ -90,37 +117,48 @@ function restartGame() {
     flippedCouplesCount = 0;
     isWining = false;
     startingTime = null;
-    var elArray = document.getElementsByClassName('card');
+    debugger;
+    let textScore = bestTimeToString(bestTime);
+    document.getElementById('timeRecord').textContent = textScore;
+    btnPlayAgainEl.style.visibility = "hidden";
+    let elArray = document.getElementsByClassName('card');
     for (var i = 0; i < elArray.length; i++) {
         elArray[i].classList.remove('flipped')
     }
+    // shuffle cards when new game is about to begin
+    var board = document.querySelector('.board');
+    for (var i = board.children.length; i >= 0; i--) {
+        board.appendChild(board.children[Math.random() * i | 0]);
+    }
+    upTime(new Date());
 }
 
 function onPageLoaded() {
-    var name = prompt("Enter your name here:")
+    let name = prompt("Enter your name here:")
     localStorage.setItem('userName', name);
+    debugger;
+    let textScore = bestTimeToString(bestTime);
+    document.getElementById('timeRecord').textContent = textScore;
+    btnPlayAgainEl.style.visibility = "hidden";
 }
 
-window.onload = onPageLoaded;
-
-// function timeRefresh() {
-//     return new Date().toLocaleDateString();
-// }
-
 function onGameFirstClick() {
+    gameIsOn = true;
     upTime(new Date());
 }
 
 function onWiningTheGame() {
+    btnPlayAgainEl.style.visibility = "visible";
+    audioWin.play();
     isWining = true;
-    gameIsOn = false;
+    isCheckScore = true;
 }
 
 function upTime(countTo) {
 
     startingTime = new Date();
 
-    // when user isen't start play the game, 
+    // when user start a game but isen't begin to play the game 
     // UI values stay with there initiate state
     if (gameIsOn === false) {
         startingTime = new Date();
@@ -135,27 +173,33 @@ function upTime(countTo) {
     // while user playing & there is no wining - time is counting up 
     // when user wins, game doesn't sets a new (difference) time interval
     // and the best record saved in system
-    if (!isWining) {
+    if (gameIsOn && !isWining) {
         countTo;
         difference = (startingTime - countTo);
     } else {
-        // if player wins the game chack if this game has the best time score
-        // it it is the best time score save it in localStorage
-        timeScore(timeRecord);
+        if (isCheckScore === true) {
+            // If player wins the game chack if this game has the best time score
+            // if it is the best time score, save it in localStorage
+            debugger;
+            timeScore(difference);
+            isCheckScore = false;
+        }
     }
 
-    // when user agree to play again, a new timer is initiate
+    // When user agree to play again, a new timer is initiate
     if (isPleyAgain === true) {
         isPleyAgain = false;
         upTime(new Date());
     }
 
     difference;
-
-    days = Math.floor(difference / (60 * 60 * 1000 * 24) * 1);
-    hours = Math.floor((difference % (60 * 60 * 1000 * 24)) / (60 * 60 * 1000) * 1);
-    mins = Math.floor(((difference % (60 * 60 * 1000 * 24)) % (60 * 60 * 1000)) / (60 * 1000) * 1);
-    secs = Math.floor((((difference % (60 * 60 * 1000 * 24)) % (60 * 60 * 1000)) % (60 * 1000)) / 1000 * 1);
+    let oneMin = (1000 * 60)
+    let oneHour = (oneMin * 60);
+    let oneDay = (oneHour * 24);
+    days = Math.floor(difference / oneDay);
+    hours = Math.floor((difference % oneDay) / oneHour);
+    mins = Math.floor((difference % oneHour) / oneMin);
+    secs = Math.floor((difference % oneMin) / 1000);
 
 
     document.getElementById('days').firstChild.nodeValue = days;
@@ -168,8 +212,41 @@ function upTime(countTo) {
 }
 
 function timeScore(time) {
+    debugger;
     if (bestTime > time) {
         bestTime = time;
         localStorage.setItem('Best time record', bestTime);
+        let textScore = bestTimeToString(bestTime);
+        document.getElementById('timeRecord').textContent = textScore;
     }
+}
+
+function bestTimeToString(bestTime) {
+
+    let bTime = "";
+
+    let oneMin = (1000 * 60)
+    let oneHour = (oneMin * 60);
+    let oneDay = (oneHour * 24);
+
+    let bSecs = bestTime / 1000;
+    let bMin = bestTime / oneMin
+    let bHour = bestTime / oneHour;
+    let bDay = bestTime / oneDay;
+    debugger;
+    if (bestTime < oneMin) {
+        return bTime = `BEST SCORE EVER: ${bSecs} - seconds`;
+    } else if (bestTime < oneHour) {
+        return bTime = `BEST SCORE EVER: ${bSecs} - seconds & ${bMin} - minuts`;
+    } else if (bestTime < oneDay) {
+        return nbTime = `BEST SCORE EVER: ${bSecs} - seconds & ${bMin} - minuts & ${bHour} - hours`;
+    } else if (bestTime >= oneDay) {
+        return bTime = `BEST SCORE EVER: ${bSecs} - seconds & ${bMin} - minuts & ${bHour} - hours & ${bDay} - days`;
+    }
+    return bTime;
+}
+
+function revealCard(cardEl) {
+    // Flip it
+    cardEl.classList.add('flipped');
 }

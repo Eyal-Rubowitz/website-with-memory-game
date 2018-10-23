@@ -2,14 +2,15 @@ body {
     background-color: black;
     background-repeat: no-repeat; 
     background-size: auto;
+    color: antiquewhite;
 }
 
-table {
+ table {
     table-layout: fixed;
+    width: 100%;
 }
 
 th {
-    width: 1000px;
     border-bottom: dotted 3px purple; 
     text-shadow: 6px 6px darkred;
 }
@@ -41,6 +42,7 @@ line-height: 200px;
     color: moccasin;
     line-height: 25px;
     font-size: 30px;
+    width: 500px;
 }
 
 span {
@@ -49,11 +51,10 @@ span {
 }
 
 
-textarea {
-    resize: none;
-    width: 1300px;
-    height: 130px;
+.aboutMe {
+    width: 100%;
     font-size: 18px;  
+    white-space: pre-line;
 }
 
 .footer {
@@ -68,6 +69,11 @@ textarea {
     border-radius: 50px 25px;
     border: dashed yellow;
     cursor: pointer;
+}
+
+.playInfoText {
+    color:yellow; 
+    text-shadow: 6px 6px darkred;
 }
 
 button {
