@@ -1,17 +1,16 @@
-// The variables type identifier was changed from "var" to "let"
-// so the variables are accessable only in there scope
-
 // A global event handler - calls "onPageLoaded" method when html DOM object is initiate
 window.onload = onPageLoaded;
 
 // Those are global variables, they stay alive and reflect the state of the game
 let elPreviousCard = null;
+
+// those two variables are compared as wining condition 
+let TOTAL_COUPLES_COUNT = 7;
 let flippedCouplesCount = 0;
 
-// This is a constant that we dont change during the game (we mark those with CAPITAL letters)
-// The variable type identifier was changed from "var" to "const" 
-// so now identifier is immutable & it can’t be reassigned.
-const TOTAL_COUPLES_COUNT = 3;
+// get best score data from local storage
+let bestTime = localStorage.getItem('Best time record') || (new Date() - new Date(1856));
+// let bestTime = localStorage.clear();
 
 // A condition to represent if payer began to play the game
 let gameIsOn = false;
@@ -19,20 +18,18 @@ let gameIsOn = false;
 // game state
 let isWining = false;
 
-// A condition to allow two cards proccess at once only
-let isPleyAgain = false;
-
-// get best score data from local storage
-let bestTime = localStorage.getItem('Best time record') || (new Date() - new Date(1856));
+let isSaveGame = false;
 
 // A condition that notify the "upTime" method when (user wins)
 // to call "timeScore" method to check the best time score.
 let isCheckScore = false;
 
-let btnPlayAgainEl = document.getElementById("playAgainContainer");
-
 // A condition to notify when two cards was revealed
 let isProcessing = false;
+
+let isReveal = false;
+
+let isLoadingGame = false;
 
 // Load an audio files
 let audioRight = new Audio('sound/right.mp3');
@@ -40,16 +37,20 @@ let audioWin = new Audio('sound/win.mp3');
 let audioWrong = new Audio('sound/wrong.mp3');
 
 // This function is called whenever the user click a card
-function cardClicked(elCard) {
+function onCardClicked(elCard) {
+
+    // No choose amount of cards.. No game !  
+    if (!document.querySelector('.popUpSelectBar').classList.contains("hideBar")) {
+        return;
+    }
 
     // if it's the first click of game move, start timer counting...
     if (gameIsOn === false) {
-        // "onGameFirstClick" - starts the time counting
-        onGameFirstClick();
+        onGameFirstClick();     // "onGameFirstClick" - starts the time counting
     }
 
-    // If the user clicked an already flipped card - do nothing & return
-    // If game in proccess, the user cannot flip other cards - so return
+    // If user clicked an already flipped card - do nothing & return
+    // If game in proccess, the user cannot flip an other cards - so return
     if (elCard.classList.contains('flipped') || isProcessing) {
         return;
     }
@@ -73,7 +74,6 @@ function cardClicked(elCard) {
         let card1 = elPreviousCard.getAttribute('data-card');
         let card2 = elCard.getAttribute('data-card');
 
-
         // No match, schedule to flip them back in 1 second
         if (card1 !== card2) {
             setTimeout(function () {
@@ -82,14 +82,18 @@ function cardClicked(elCard) {
         } else {
             // Yes! a match!
             flippedCouplesCount++;
+
+            // const reveal class added
+            elPreviousCard.classList.add('constRevealed');
+            elCard.classList.add('constRevealed');
+
             elPreviousCard = null;
-            revealCard(elCard);
 
             // is All cards flipped?!
             if (TOTAL_COUPLES_COUNT === flippedCouplesCount) {
-                onWiningTheGame();
+                winingTheGame();
             } else {
-                // answere is right - while the game is still beeing played
+                // right answere sound - while the game is still beeing played
                 audioRight.play();
             }
             isProcessing = false;
@@ -97,40 +101,42 @@ function cardClicked(elCard) {
     }
 }
 
-function playAgain() {
+function onPlayAgain() {
     gameIsOn = false;
     restartGame();
-    isPleyAgain = true;
+    this.isPleyAgain = true;
 }
 
 function restartGame() {
     // set game attributes to it's initiate state
-    elPreviousCard = null;
+    showSelectBar();
     flippedCouplesCount = 0;
     isWining = false;
-    startingTime = null;
+    currentTime = null;
     let textScore = bestTimeToString(bestTime);
     document.getElementById('timeRecord').textContent = textScore;
-    btnPlayAgainEl.style.visibility = "hidden";
+    // "querySelector" returns a single element
+    // "querySelectorAll" returns a "NodeList" type
+    // which is iterable & can be loop the sane way as "getElementsByClassName"
+    document.querySelector('#playAgainContainer').classList.add('hideElement');
+    // "getElementsByClassName" returns an "HTMLCollection" type
+    // and it can be loop the same way as array
     let elArray = document.getElementsByClassName('card');
-    for (var i = 0; i < elArray.length; i++) {
-        elArray[i].classList.remove('flipped')
-    }
-    // shuffle cards when new game is about to begin
-    var board = document.querySelector('.board');
-    for (var i = board.children.length; i >= 0; i--) {
-        board.appendChild(board.children[Math.random() * i | 0]);
-    }
+    Array.from(elArray).forEach((cardEl) => cardEl.classList.remove('flipped'));
+    Array.from(elArray).forEach((cardEl) => cardEl.classList.remove('constRevealed'));
+    onShuffleCards();
     upTime(new Date());
 }
 
 function onPageLoaded() {
+    showSelectBar();
+    document.querySelector('#playAgainContainer').classList.add('hideElement');
     let name = prompt("Enter your name here:")
     localStorage.setItem('userName', name);
-    document.getElementById('playerName').textContent = "Hello " + name + " !";
+    if(name === null) { name = '' }
+    document.getElementById('playerName').textContent = `Hello ${name} !`;
     let textScore = bestTimeToString(bestTime);
     document.getElementById('timeRecord').textContent = textScore;
-    btnPlayAgainEl.style.visibility = "hidden";
 }
 
 function onGameFirstClick() {
@@ -138,67 +144,62 @@ function onGameFirstClick() {
     upTime(new Date());
 }
 
-function onWiningTheGame() {
-    btnPlayAgainEl.style.visibility = "visible";
+function winingTheGame() {
+    PlayAgainEl = document.querySelector('#playAgainContainer');
+    PlayAgainEl.classList.remove('hideElement');
     audioWin.play();
     isWining = true;
     isCheckScore = true;
 }
 
-function upTime(countTo) {
+function upTime(startingTime) {
 
-    startingTime = new Date();
+    currentTime = new Date();
 
-    // when user start a game but isen't begin to play the game 
-    // UI values stay with there initiate state
+    // when user start a new game but wasn't begin to play 
+    // UI values set with an initiate state
     if (gameIsOn === false) {
-        startingTime = new Date();
-        countTo = startingTime;
-        difference = (startingTime - countTo);
+        currentTime = new Date();
+        startingTime = currentTime;
+        difference = (currentTime - startingTime);
         days = 0;
         hours = 0;
         mins = 0;
         secs = 0;
     }
 
-    // while user playing & there is no wining - time is counting up 
-    // when user wins, game doesn't sets a new (difference) time interval
-    // and the best record saved in system
-    if (gameIsOn && !isWining) {
-        countTo;
-        difference = (startingTime - countTo);
+    if (isLoadingGame === true) {
+        difference = updateLoadGameTime();
+        startingTime = new Date(currentTime - difference);
     } else {
-        if (isCheckScore === true) {
-            // If player wins the game chack if this game has the best time score
-            // if it is the best time score, save it in localStorage
-            timeScore(difference);
-            isCheckScore = false;
+        // while user playing & there is no wining - time is counting up 
+        if (gameIsOn && !isWining) {
+            startingTime;
+            difference = (currentTime - startingTime);
+            check = (startingTime - currentTime);
+        } else {
+            // when user wins, game doesn't sets a new "difference" (time interval)
+            // and the best record saved in system
+            if (isCheckScore === true) {
+                // If player wins the game chack if this game has the best time score
+                // if it is the best time score, save it in localStorage
+                timeScore(difference);
+                isCheckScore = false;
+            }
         }
     }
 
-    // When user agree to play again, a new timer is initiate
-    if (isPleyAgain === true) {
-        isPleyAgain = false;
-        upTime(new Date());
+    difference;
+
+    showTimeUI(difference);
+
+    if (isSaveGame === true) {
+        saveGame(difference);
+        isSaveGame = false;
     }
 
-    difference;
-    let oneMin = (1000 * 60)
-    let oneHour = (oneMin * 60);
-    let oneDay = (oneHour * 24);
-    days = Math.floor(difference / oneDay);
-    hours = Math.floor((difference % oneDay) / oneHour);
-    mins = Math.floor((difference % oneHour) / oneMin);
-    secs = Math.floor((difference % oneMin) / 1000);
-
-
-    document.getElementById('days').firstChild.nodeValue = days;
-    document.getElementById('hours').firstChild.nodeValue = hours;
-    document.getElementById('minutes').firstChild.nodeValue = mins;
-    document.getElementById('seconds').firstChild.nodeValue = secs;
-
     clearTimeout(upTime.to);
-    upTime.to = setTimeout(function () { upTime(countTo); }, 1000);
+    upTime.to = setTimeout(function () { upTime(startingTime); }, 1000);
 }
 
 function timeScore(time) {
@@ -222,9 +223,9 @@ function bestTimeToString(bestTime) {
     let bMin = bestTime / oneMin
     let bHour = bestTime / oneHour;
     let bDay = bestTime / oneDay;
-    debugger;
+
     if (bestTime < oneMin) {
-        return bTime = `BEST SCORE EVER: ${bSecs} - seconds`;
+        return bTime = `BEST SCORE: ${bSecs} - seconds`;
     } else if (bestTime < oneHour) {
         return bTime = `BEST SCORE EVER: ${bSecs} - seconds & ${bMin} - minuts`;
     } else if (bestTime < oneDay) {
@@ -249,8 +250,124 @@ function flipCardBack(card1, card2) {
     isProcessing = false;
 }
 
-function updateUserName() {
+function onUpdateUserName() {
     let name = prompt("Enter your name here:")
     localStorage.setItem('userName', name);
+    if(name === null) { name = '' }
     document.getElementById('playerName').textContent = "Hello " + name + " !";
+}
+
+// A simple & short method for flip & reveal un-guessed cards
+function onRevealCardsByClass() {
+    let cardsDeck = document.getElementsByClassName('card');
+    if (isReveal === false) {
+        Array.from(cardsDeck).forEach((cardEl) => cardEl.classList.add('flipped'));
+        isReveal = true;
+    } else {
+        Array.from(cardsDeck).forEach((cardEl) => cardEl.classList.remove('flipped'));
+        isReveal = false;
+    }
+}
+
+function onShuffleCards() {
+    // shuffle cards when new game is about to begin
+    let board = document.querySelector('.board');
+    for (let i = board.children.length; i >= 0; i--) {
+        board.appendChild(board.children[Math.random() * i | 0]);
+    }
+}
+
+function setGameCardsAmount() {
+    let cardsAmountSelect = document.getElementById("cardAmountSelect");
+    if (cardsAmountSelect.options[cardsAmountSelect.selectedIndex].value === "") {
+        return
+    }
+    let gameCardsAmount = Number(cardsAmountSelect.options[cardsAmountSelect.selectedIndex].value);
+    TOTAL_COUPLES_COUNT = gameCardsAmount / 2;
+
+    let cardsDeck = document.getElementsByClassName('card');
+
+    // init all cards to be abled
+    Array.from(cardsDeck).forEach((card) => card.classList.remove('unUsedCard'));
+
+    // don't show cards with card.id that is greater then user input game amount of cards 
+    //  CSS class "unUsedCard" added to element for not exists in DOM
+    Array.from(cardsDeck).forEach((card) =>
+        ((Number(card.id)) > gameCardsAmount) ? card.classList.add('unUsedCard') : card
+    )
+
+    onShuffleCards();
+
+    let selectBar = document.getElementsByClassName('popUpSelectBar')[0];
+    selectBar.classList.add('hideBar');
+}
+
+function showSelectBar() {
+    let selectBar = document.getElementsByClassName('popUpSelectBar')[0];
+    selectBar.classList.remove('hideBar');
+}
+
+function showTimeUI(timeInterval) {
+    let oneMin = (1000 * 60)
+    let oneHour = (oneMin * 60);
+    let oneDay = (oneHour * 24);
+    days = Math.floor(timeInterval / oneDay);
+    hours = Math.floor((timeInterval % oneDay) / oneHour);
+    mins = Math.floor((timeInterval % oneHour) / oneMin);
+    secs = Math.floor((timeInterval % oneMin) / 1000);
+
+    document.getElementById('days').firstChild.nodeValue = days;
+    document.getElementById('hours').firstChild.nodeValue = hours;
+    document.getElementById('minutes').firstChild.nodeValue = mins;
+    document.getElementById('seconds').firstChild.nodeValue = secs;
+}
+
+function onSaveGame() {
+    setTimeout(function () {
+        isSaveGame = true;
+    }, 0);
+
+}
+
+function saveGame(timeInterval) {
+    // remove an old localStorage "saveGameStage" key&value (if exists) before seting a new one
+    localStorage.removeItem('saveGameStage');
+    // Grab html body element (with all the elements in it)
+    let gameStage = document.getElementById('gameBody').innerHTML;
+    let timeStage = timeInterval;
+    let gameStageObject = { htmlBodyElements: gameStage, time: timeStage, cardsAmount: TOTAL_COUPLES_COUNT };
+    localStorage.setItem('saveGameStage', JSON.stringify(gameStageObject));
+}
+
+function onLoadSavedGame() {
+    if (localStorage.getItem('saveGameStage') === '' || localStorage.getItem('saveGameStage') === null) {
+        return
+    }
+
+    let jsonGameStageObject = JSON.parse(localStorage.getItem('saveGameStage'));
+
+    let htmlBody = document.getElementById('gameBody');
+    htmlBody.innerHTML = jsonGameStageObject.htmlBodyElements;
+
+    TOTAL_COUPLES_COUNT = Number(jsonGameStageObject.cardsAmount);
+    flippedCouplesCount = (document.querySelectorAll('.constRevealed').length / 2);
+
+    gameIsOn = true;
+    isLoadingGame = true;
+
+    upTime(new Date());
+}
+
+function updateLoadGameTime() {
+    isLoadingGame = false;
+    gameIsOn = true;
+    isWining = false;
+    let jsonGameStageObject = JSON.parse(localStorage.getItem('saveGameStage'));
+    let timeStage = Number(jsonGameStageObject.time);
+    return timeStage;
+}
+
+function onToggleBurger() {
+    let burger = document.getElementsByClassName('toggleBurger')[0];
+    burger.classList.toggle('open');
 }

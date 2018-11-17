@@ -3,81 +3,146 @@
 
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <title>My App</title>
   <link rel="stylesheet" href="css/game.css" />
 </head>
 
 <body>
+  <div id="gameBody">
 
-  <div class="header">
-    <img src="img/layout/logo.png">
-    <h1>Memory Monsters</h1>
+    <div class="header">
+      <!-- <img src="img/layout/logo.png"> -->
+      <!-- Now img is part of the CSS -->
+      <h1>Memory Monsters</h1>
+    </div>
+
+    <div class="navContent">
+      <div id="paging">
+        <a href="index.html">&lArr; Home</a>
+      </div>
+      <h1 id="burger" onclick="onToggleBurger()">&#9776;</h1>
+      <div class="toggleBurger">
+        <nav id="optionNav">
+          <button class="btn" onclick="onShuffleCards()">Shuffle Cards Deck</button>
+          <button class="btn" onclick="onRevealCardsByClass()">Cards Reveal</button>
+          <button class="btn" onclick="onSaveGame()">SAVE GAME</button>
+          <button class="btn" onclick="onLoadSavedGame()">LOAD GAME</button>
+        </nav>
+      </div>
+    </div>
+
+    <div class="gameInfo">
+
+      <div class="leftInfo">
+        <h2 id="playerName"></h2>
+        <h2>
+          Your playing time is...
+        </h2>
+      </div>
+
+      <div class="rightInfo">
+        <table id="countUp">
+          <tr>
+            <td id="days">00</td>
+            <td id="hours">00</td>
+            <td id="minutes">00</td>
+            <td id="seconds">00</td>
+          </tr>
+          <tr>
+            <td class="timeRefDays">days</td>
+            <td class="timeRefHours">hours</td>
+            <td class="timeRefMinutes">minutes</td>
+            <td class="timeRefSeconds">second</td>
+          </tr>
+        </table>
+        <div id="timeRecord"></div>
+      </div>
+
+    </div> <!-- /.gameInfo -->
+
+    <div class="board">
+      <div class="card" data-card="1" id=1 onclick="onCardClicked(this)">
+        <img src="img/cards/1.png">
+        <img class="back" src="img/cards/back.png">
+      </div>
+      <div class="card" data-card="1" id=2 onclick="onCardClicked(this)">
+        <img src="img/cards/1.png">
+        <img class="back" src="img/cards/back.png">
+      </div>
+      <div class="card" data-card="2" id=3 onclick="onCardClicked(this)">
+        <img src="img/cards/2.png">
+        <img class="back" src="img/cards/back.png">
+      </div>
+      <div class="card" data-card="2" id=4 onclick="onCardClicked(this)">
+        <img src="img/cards/2.png">
+        <img class="back" src="img/cards/back.png">
+      </div>
+      <div class="card" data-card="3" id=5 onclick="onCardClicked(this)">
+        <img src="img/cards/3.png">
+        <img class="back" src="img/cards/back.png">
+      </div>
+      <div class="card" data-card="3" id=6 onclick="onCardClicked(this)">
+        <img src="img/cards/3.png">
+        <img class="back" src="img/cards/back.png">
+      </div>
+      <div class="card" data-card="4" id=7 onclick="onCardClicked(this)">
+        <img src="img/cards/4.png">
+        <img class="back" src="img/cards/back.png">
+      </div>
+      <div class="card" data-card="4" id=8 onclick="onCardClicked(this)">
+        <img src="img/cards/4.png">
+        <img class="back" src="img/cards/back.png">
+      </div>
+      <div class="card" data-card="5" id=9 onclick="onCardClicked(this)">
+        <img src="img/cards/5.png">
+        <img class="back" src="img/cards/back.png">
+      </div>
+      <div class="card" data-card="5" id=10 onclick="onCardClicked(this)">
+        <img src="img/cards/5.png">
+        <img class="back" src="img/cards/back.png">
+      </div>
+      <div class="card" data-card="6" id=11 onclick="onCardClicked(this)">
+        <img src="img/cards/6.png">
+        <img class="back" src="img/cards/back.png">
+      </div>
+      <div class="card" data-card="6" id=12 onclick="onCardClicked(this)">
+        <img src="img/cards/6.png">
+        <img class="back" src="img/cards/back.png">
+      </div>
+      <div class="card" data-card="7" id=13 onclick="onCardClicked(this)">
+        <img src="img/cards/7.png">
+        <img class="back" src="img/cards/back.png">
+      </div>
+      <div class="card" data-card="7" id=14 onclick="onCardClicked(this)">
+        <img src="img/cards/7.png">
+        <img class="back" src="img/cards/back.png">
+      </div>
+    </div> <!-- /.board -->
+
+    <div class="popUpSelectBar">
+      <select id="cardAmountSelect">
+        <option value="">Choose amount of cards:</option>
+        <option value="6">6 cards</option>
+        <option value="8">8 cards</option>
+        <option value="10">10 cards</option>
+        <option value="12">12 cards</option>
+        <option value="14">14 cards</option>
+      </select>
+      <button id="setCardAmountBtn" class="btn" onclick="setGameCardsAmount()">Let's Play !</button>
+    </div>
+
+    <br>
+
+    <div id="playAgainContainer">
+      <h2>Yay & Wooohoo... Congratulations you win !!!</h2>
+      <h3><u>Do you like to play again</u> ?</h3>
+      <button class="btnPlayAgain btn" onclick="onPlayAgain()">YES LET'S PLAY !</button>
+      <button class="btnPlayAgain btn" onclick="onUpdateUserName()">A NEW PLAYER</button>
+    </div>
+
+
   </div>
-
-  <div class="board">
-    <div class="card" data-card="1" onclick="cardClicked(this)">
-      <img src="img/cards/1.png">
-      <img class="back" src="img/cards/back.png">
-    </div>
-    <div class="card" data-card="7" onclick="cardClicked(this)">
-      <img src="img/cards/7.png">
-      <img class="back" src="img/cards/back.png">
-    </div>
-    <div class="card" data-card="1" onclick="cardClicked(this)">
-      <img src="img/cards/1.png">
-      <img class="back" src="img/cards/back.png">
-    </div>
-    <div class="card" data-card="7" onclick="cardClicked(this)">
-      <img src="img/cards/7.png">
-      <img class="back" src="img/cards/back.png">
-    </div>
-    <div class="card" data-card="5" onclick="cardClicked(this)">
-      <img src="img/cards/5.png">
-      <img class="back" src="img/cards/back.png">
-    </div>
-    <div class="card" data-card="5" onclick="cardClicked(this)">
-      <img src="img/cards/5.png">
-      <img class="back" src="img/cards/back.png">
-    </div>
-  </div>
-
-  <div>
-    <h2 id="playerName"></h2>
-    <h2>
-      Your playing time is...
-    </h2>
-    <table id="countup">
-      <tr>
-        <td id="days">00</td>
-        <td id="hours">00</td>
-        <td id="minutes">00</td>
-        <td id="seconds">00</td>
-      </tr>
-      <tr>
-        <td class="timeRefDays">days</td>
-        <td class="timeRefHours">hours</td>
-        <td class="timeRefMinutes">minutes</td>
-        <td class="timeRefSeconds">second</td>
-      </tr>
-    </table>
-  </div>
-
-  <div class="paging">
-    <a href="index.html">Back to home page</a>
-  </div>
-
-
-  <div id="timeRecord"></div>
-
-  <br>
-
-  <div id="playAgainContainer">
-    <h2>Yay & Wooohoo... Congratulations you win !!!</h2>
-    <h3><u>Do you like to play again</u> ?</h3>
-    <button class="btnPlayAgain" onclick="playAgain()">YES LET'S PLAY !</button>
-    <button class="btnPlayAgain" onclick="updateUserName()">A NEW PLAYER</button>
-  </div>
-
   <script src="js/game.js"></script>
 </body>
 

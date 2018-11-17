@@ -1,55 +1,87 @@
 body {
-    background-color: black;
+    background-color: darkslategrey;
     background-repeat: no-repeat; 
-    background-size: auto;
+    background-size: contain;
     color: antiquewhite;
+    background-color: black;
+    background-image:url('../img/layout/Spaceballs-RV.jpg');
+    width:100%;
+    height: 100%;
 }
 
- table {
+table {
     table-layout: fixed;
     width: 100%;
 }
 
 th {
-    border-bottom: dotted 3px purple; 
     text-shadow: 6px 6px darkred;
 }
+
+/* th::after {
+    content: url('../img/me/ME.jpg');
+    background-repeat: no-repeat; 
+    background-size: auto;
+} */
 
 h1 {
     color: blueviolet;
     font-family: fantasy;
-    font-size: 130px;
+    font-size: 550%;
 }
 
 .pic {
     width: 50%;
-    height: 8%;
+    min-width: 200px;
+    height: 7%;
 }
 
 a {
     text-decoration: none;
     color: blue;
     text-shadow: 3px 3px lightgoldenrodyellow;
+    white-space: nowrap;
+}
+
+a:focus { 
+    text-decoration: none;
+    color: yellow;
+    text-shadow: 3px 3px red;
 }
 
 .myDetails {
-font-size: 40px;
-padding-top: 10em;
-line-height: 200px;
+font-size: 220%;
+}
+
+.myDetails h2, h3 {
+    line-height: 110%;
+}
+
+.letsPlayTr {
+    border-top: dotted 113px purple; 
+    text-align: center;
 }
 
 .generalDetail {
     color: moccasin;
-    line-height: 25px;
-    font-size: 30px;
+    line-height: 30px;
+    font-size: 105%;
     width: 500px;
 }
 
-span {
-    font-size: 40px;
-    color: blue;
+li:nth-child(even) {
+    color: rgb(250, 120, 142);
 }
 
+.generalDetail li:hover {
+    color:  red;
+    font-size: 120%;
+}
+
+span {
+    font-size: 100%;
+    color: blue;
+}
 
 .aboutMe {
     width: 100%;
@@ -63,12 +95,17 @@ span {
 }
 
 .letsPlay {
-    text-align: center;
-    align-items: center;
+    /* text-align: center;
+    align-items: center; */
     margin: 5%;
     border-radius: 50px 25px;
     border: dashed yellow;
     cursor: pointer;
+}
+
+.letsPlayTr {
+   
+    margin: auto;
 }
 
 .playInfoText {
@@ -76,16 +113,216 @@ span {
     text-shadow: 6px 6px darkred;
 }
 
-button {
-    font-size: 32px;
-    width: 200px;
+.btn {
+    font-size: 190%;
+    width: 25%;
+    min-width: 175px;
     background-color: gold;
-    
+    margin-bottom: 2%;
+    cursor: pointer;
 }
 
 .letsPlay:hover .btn {
+    width: 35%;
+    min-width: 200px;
     transition: 2s;
-    width: 400px;
-    font-size: 36px;
     border-radius: 150px 150px;
+}
+
+button:active {
+    background-color: darkorange;
+    color: darkblue;
+}
+
+.letsPlay > span {
+    font-size: 250%;
+}
+
+.videoRowContent {
+    position: relative;
+    background-color: gray;
+}
+
+.videoContent {
+    position: relative;
+    text-align: center;
+    height: 40%;
+    width: 50%;
+    margin: 15px auto;
+}
+
+.videoContent > h2 {
+    position: relative;
+    font-size: 150%;
+    color: yellow;
+    text-shadow: 2px 2px darkred;
+    text-decoration: underline;
+}
+
+
+.cssDevice {
+    position: relative;
+    background-color: black;
+    border-radius: 10px;
+    width: 90%;
+    padding: 10px 20px;
+}
+
+.cssDevice > iframe {
+    border: solid 1px gray;
+    width: 100%;
+    height: 280px;
+}
+
+.cssDevice::before {
+    content: '';
+    display: block;
+    width: 15px;
+    height: 15px;
+    position: absolute;
+    left: 0.5%;
+    bottom: 48%;
+    background: #333;
+    border-radius: 50%;
+}
+
+.cssDevice::after {
+    content: '';
+    display: block;
+    width: 1%;
+    height: 50%;
+    position: absolute;
+    left: 98%;
+    bottom: 25%;
+    background: #333;
+    border-radius: 36%;
+}
+
+/* MEDIA QUERIES */
+
+/* default computer screen (1024px & more) */
+
+/* big tablet screen (769px - 1024px) */
+@media screen and (max-width: 1024px) {
+    h1 {
+        font-size: 500%;
+    }
+
+    h2, h3 {
+        font-size: 100%;
+    }
+
+    span {
+        font-size: 85%;
+    }
+
+    a {
+        font-size: 85%;
+    }
+
+    li { 
+        font-size: 85%;
+    }
+
+    .cssDevice {
+        width: 130%;
+        right: 20%;
+    }
+
+    .cssDevice::after {
+        left: 97.5%;
+    }
+
+    .letsPlay > span {
+        font-size: 200%;
+    }
+}
+
+/*  tablet screen (481 - 786px) */
+@media screen and (max-width: 786px) {
+    h1 {
+        font-size: 350%;
+    }
+
+    h2, h3 {
+        font-size: 90%;
+    }
+
+    .pic {
+        min-width: 175px;
+        height: 6%;
+    }
+
+    span {
+        font-size: 80%;
+    }
+
+    a {
+        font-size: 70%;
+    }
+
+    li {
+        font-size: 70%;
+    }
+
+    .generalDetail li:hover {
+        color:  red;
+        font-size: 90%;
+    }
+
+    .cssDevice {
+        width: 140%;
+        right: 25%;
+    }
+
+    .cssDevice::after {
+        left: 97%;
+    }
+
+    .letsPlay > span {
+        font-size: 180%;
+    }
+}
+
+/* mobile screen (480px & less) */
+@media screen and (max-width: 480px) {
+    h1 {
+        font-size: 300%;
+    }
+
+    .pic {
+        min-width: 150px;
+        height: 5%;
+    }
+
+    h2, h3 {
+        font-size: 70%;
+    }
+
+    li {
+        font-size: 60%;
+    }
+
+    .generalDetail li:hover {
+        color:  red;
+        font-size: 80%;
+    }
+
+    .cssDevice::before{
+        left: 1%;
+    }
+
+    .cssDevice {
+        width: 170%;
+        right: 45%;
+    }
+
+    .cssDevice::after {
+        left: 96.5%;
+    }
+
+    .videoContent > h2 {
+        font-size: 110%;
+    }
+    
 }
