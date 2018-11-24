@@ -1,6 +1,9 @@
-function onPageLoaded() {
-    var name = prompt("Enter your name here:")
-    localStorage.setItem('userName', name);
-}
+window.onload = function(){
+    setTimeout(onIndexPageLoaded, 1500);
+};
 
-window.onload = onPageLoaded;
+function onIndexPageLoaded() {
+    let userName = prompt("Enter your name here:", name);
+    if(name === null) { userName = ''}
+    localStorage.setItem('userName', userName);
+}

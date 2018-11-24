@@ -87,7 +87,6 @@ body {
     border: red solid 5px;
     border-radius: 9px;
     z-index: 1; /* Sit on top */
-
 }
 
 .popUpSelectBar.hideBar {
@@ -254,19 +253,10 @@ a {
     html, body {
         height: 100%;
     }
-    
-    #countUp {
-        
-    }
 
     .leftInfo {
         font-size: 80%;
     }
-/* 
-    #timeRecord {
-        font-size: 100%;
-        padding: 26px;
-    } */
 
     .board {
         height: 20%;
@@ -320,7 +310,6 @@ a {
         text-align: center;
         padding-top: 15%; 
         background-size: 14%;
-        
     }
  
     .navContent {
@@ -366,7 +355,7 @@ a {
     .popUpSelectBar {
         position: relative;
         right: -26%;
-        bottom: -10%;
+        bottom: -20%;
     }
 
     .popUpSelectBar #setCardAmountBtn {
@@ -457,4 +446,103 @@ a {
         float: right;
         margin: 0;
     }
+
+    #burger:active {
+        background-color: greenyellow;
+    }
+}
+
+
+/* ----------- Galaxy S6 ----------- */
+
+@media screen 
+and (max-width: 360px) {
+        
+    .header {
+        font-size: 90%;
+        padding-top: 1%;
+    }
+
+    .navContent {
+        padding: 1%;
+    }
+
+    .gameInfo {
+        bottom: 58%;
+        margin-bottom: 5%;
+    }
+
+    .leftInfo {
+        width: 39%;
+        font-size: 80%;   
+    }
+
+    .rightInfo {
+        width: 50%;
+        margin-top: 5%;
+        margin-right: 10%;
+    }
+
+    #countUp td {
+        padding: 5px;
+        min-width: 2rem;
+    }
+
+    #timeRecord{
+        min-width: 210px;
+        font-size: 80%;
+        padding: 4px;
+    }
+    
+    .board {
+        bottom: 45%;
+        width: 100%;
+    }
+
+    .popUpSelectBar {
+        right: -20%;
+        bottom: -25%;
+    }
+
+    .toggleBurger.open {
+        width: 50%;
+        height: 1255%;
+        top: 5%;
+    }
+
+    .navContent button { 
+        font-size: 90%;
+        line-height: 210%;
+    }
+}
+
+
+/* ----------- Galaxy S3, S4, S5 and Note 3 ----------- */
+
+@media screen 
+  and (max-width: 320px) {
+    .header {
+        font-size: 80%;
+    }
+
+    #countUp td {
+        padding: 2.5px;
+        min-width: 2.3rem;
+    }
+    #timeRecord{
+        min-width: 190px;
+        font-size: 70%;
+    }
+    .popUpSelectBar {
+        right: -15%;
+    }
+    .toggleBurger.open {
+        height: 1255%;
+        top: 5%;
+    }
+    .navContent button { 
+        font-size: 85%;
+        line-height: 220%;
+    }
+
 }

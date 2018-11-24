@@ -324,5 +324,119 @@ button:active {
     .videoContent > h2 {
         font-size: 110%;
     }
+
+
+    /* ----------- Galaxy S6 ----------- */
+
+    @media screen and (max-width: 360px) {
+        h1 {
+            font-size: 220%;
+        }
     
+        .pic {
+            min-width: 140px;
+            height: 4%;
+        }
+    
+        .myDetails h2, h3 {
+            line-height: 85%;
+        }
+
+        h2, h3 {
+            font-size: 50%;
+        }
+    
+        li {
+            font-size: 45%;
+        }
+
+        .generalDetail li:hover {
+            color:  red;
+            font-size: 48%;
+        }
+    
+        span {
+            font-size: 50%;
+        }
+
+        a {
+            font-size: 50%;
+        }
+
+        .cssDevice {
+            width: 160%;
+        }
+
+        .cssDevice > iframe {
+            height: 140px;
+        }
+
+        .letsPlay > span {
+            font-size: 120%;
+        }
+
+        .footer {
+            font-size: 17px;
+        }
+    }
+    
+    /* ----------- Galaxy S3, S4, S5 and Note 3 ----------- */
+    @media screen and (max-width: 320px) {
+        h1 {
+            font-size: 200%;
+        }
+    
+        .pic {
+            min-width: 120px;
+            height: 3.5%;
+        }
+    
+        .myDetails h2, h3 {
+            line-height: 80%;
+        }
+
+        h2, h3 {
+            font-size: 45%;
+        }
+    
+        li {
+            font-size: 30%;
+        }
+
+        .generalDetail li:hover {
+            color:  red;
+            font-size: 34%;
+        }
+    
+        span {
+            font-size: 50%;
+        }
+
+        a {
+            font-size: 45%;
+        }
+
+        .generalDetail { 
+            line-height: 20px;
+        }
+        .videoContent > h2 {
+            font-size: 100%;
+        }
+
+        .cssDevice {
+            width: 160%;
+        }
+
+        .cssDevice > iframe {
+            height: 120px;
+        }
+
+        .letsPlay > span {
+            font-size: 100%;
+        }
+
+        .footer {
+            font-size: 15px;
+        }
+    }
 }

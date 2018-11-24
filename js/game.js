@@ -4,18 +4,24 @@ window.onload = onPageLoaded;
 // Those are global variables, they stay alive and reflect the state of the game
 let elPreviousCard = null;
 
-// those two variables are compared as wining condition 
+// Those two variables are compared as wining condition 
 let TOTAL_COUPLES_COUNT = 7;
 let flippedCouplesCount = 0;
-
-// get best score data from local storage
-let bestTime = localStorage.getItem('Best time record') || (new Date() - new Date(1856));
-// let bestTime = localStorage.clear();
+debugger;
+let initScore = (new Date() - new Date(1856));
+if(localStorage.getItem('Best time records') === null) {
+    localStorage.setItem('Best time records', JSON.stringify(new Array(initScore, initScore, initScore, initScore, initScore)));
+}
+// Get best score data from local storage
+let initBestScores = JSON.parse(localStorage.getItem('Best time records'));
+let bestTimeRecords = initBestScores;
+// initBestScores = JSON.parse(localStorage.getItem('Best time records')) || (new Date() - new Date(1856));
+// let bestTimeRecords = localStorage.clear();
 
 // A condition to represent if payer began to play the game
 let gameIsOn = false;
 
-// game state
+// Game state
 let isWining = false;
 
 let isSaveGame = false;
@@ -113,7 +119,7 @@ function restartGame() {
     flippedCouplesCount = 0;
     isWining = false;
     currentTime = null;
-    let textScore = bestTimeToString(bestTime);
+    let textScore = bestTimeToString( JSON.parse(bestTimeRecords[getGameIndex()]) );
     document.getElementById('timeRecord').textContent = textScore;
     // "querySelector" returns a single element
     // "querySelectorAll" returns a "NodeList" type
@@ -131,12 +137,8 @@ function restartGame() {
 function onPageLoaded() {
     showSelectBar();
     document.querySelector('#playAgainContainer').classList.add('hideElement');
-    let name = prompt("Enter your name here:")
-    localStorage.setItem('userName', name);
-    if(name === null) { name = '' }
     document.getElementById('playerName').textContent = `Hello ${name} !`;
-    let textScore = bestTimeToString(bestTime);
-    document.getElementById('timeRecord').textContent = textScore;
+
 }
 
 function onGameFirstClick() {
@@ -203,15 +205,15 @@ function upTime(startingTime) {
 }
 
 function timeScore(time) {
-    if (bestTime > time) {
-        bestTime = time;
-        localStorage.setItem('Best time record', bestTime);
-        let textScore = bestTimeToString(bestTime);
+    if (bestTimeRecords[getGameIndex()] > time) {
+        bestTimeRecords[getGameIndex()] = time;
+        localStorage.setItem('Best time records', JSON.stringify(bestTimeRecords));
+        let textScore = bestTimeToString(bestTimeRecords[getGameIndex()]);
         document.getElementById('timeRecord').textContent = textScore;
     }
 }
 
-function bestTimeToString(bestTime) {
+function bestTimeToString(recordTime) {
 
     let bTime = "";
 
@@ -219,19 +221,19 @@ function bestTimeToString(bestTime) {
     let oneHour = (oneMin * 60);
     let oneDay = (oneHour * 24);
 
-    let bSecs = bestTime / 1000;
-    let bMin = bestTime / oneMin
-    let bHour = bestTime / oneHour;
-    let bDay = bestTime / oneDay;
+    let bSecs = recordTime / 1000;
+    let bMin = recordTime / oneMin
+    let bHour = recordTime / oneHour;
+    let bDay = recordTime / oneDay;
 
-    if (bestTime < oneMin) {
-        return bTime = `BEST SCORE: ${bSecs} - seconds`;
-    } else if (bestTime < oneHour) {
-        return bTime = `BEST SCORE EVER: ${bSecs} - seconds & ${bMin} - minuts`;
-    } else if (bestTime < oneDay) {
-        return nbTime = `BEST SCORE EVER: ${bSecs} - seconds & ${bMin} - minuts & ${bHour} - hours`;
-    } else if (bestTime >= oneDay) {
-        return bTime = `BEST SCORE EVER: ${bSecs} - seconds & ${bMin} - minuts & ${bHour} - hours & ${bDay} - days`;
+    if (recordTime < oneMin) {
+        return bTime = `YOUR BEST SCORE: ${bSecs} - seconds`;
+    } else if (recordTime < oneHour) {
+        return bTime = `YOUR BEST SCORE: ${bSecs} - seconds & ${bMin} - minuts`;
+    } else if (recordTime < oneDay) {
+        return nbTime = `YOUR BEST SCORE: ${bSecs} - seconds & ${bMin} - minuts & ${bHour} - hours`;
+    } else if (recordTime >= oneDay) {
+        return bTime = `YOUR BEST SCORE: ${bSecs} - seconds & ${bMin} - minuts & ${bHour} - hours & ${bDay} - days`;
     }
     return bTime;
 }
@@ -251,9 +253,9 @@ function flipCardBack(card1, card2) {
 }
 
 function onUpdateUserName() {
-    let name = prompt("Enter your name here:")
-    localStorage.setItem('userName', name);
-    if(name === null) { name = '' }
+    let userName = prompt("Enter your name here:", name)
+    if (name === null) { userName = '' }
+    localStorage.setItem('userName', userName);
     document.getElementById('playerName').textContent = "Hello " + name + " !";
 }
 
@@ -297,6 +299,9 @@ function setGameCardsAmount() {
     )
 
     onShuffleCards();
+    debugger;
+    let textScore = bestTimeToString(bestTimeRecords[getGameIndex()]);
+    document.getElementById('timeRecord').textContent = textScore;
 
     let selectBar = document.getElementsByClassName('popUpSelectBar')[0];
     selectBar.classList.add('hideBar');
@@ -335,7 +340,11 @@ function saveGame(timeInterval) {
     // Grab html body element (with all the elements in it)
     let gameStage = document.getElementById('gameBody').innerHTML;
     let timeStage = timeInterval;
-    let gameStageObject = { htmlBodyElements: gameStage, time: timeStage, cardsAmount: TOTAL_COUPLES_COUNT };
+    let gameStageObject = {
+        htmlBodyElements: gameStage,
+        time: timeStage,
+        cardsAmount: TOTAL_COUPLES_COUNT
+    };
     localStorage.setItem('saveGameStage', JSON.stringify(gameStageObject));
 }
 
@@ -370,4 +379,14 @@ function updateLoadGameTime() {
 function onToggleBurger() {
     let burger = document.getElementsByClassName('toggleBurger')[0];
     burger.classList.toggle('open');
+}
+
+// When game has 6 cards, there is 3 couples,
+// the index of best time record is total couples decreased by 3,
+// so we get the "bestTime[0]" correct time value
+function getGameIndex() {
+    debugger;
+    const INDEX_ADJUST = 3;
+    let recordIndex = (TOTAL_COUPLES_COUNT - INDEX_ADJUST);
+    return recordIndex;
 }
