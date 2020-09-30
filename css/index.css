@@ -38,7 +38,7 @@ h1 {
 
 a {
     text-decoration: none;
-    color: blue;
+    color: grey;
     text-shadow: 3px 3px lightgoldenrodyellow;
     white-space: nowrap;
 }
@@ -50,11 +50,11 @@ a:focus {
 }
 
 .myDetails {
-font-size: 220%;
+font-size: 250%;
 }
 
 .myDetails h2, h3 {
-    line-height: 110%;
+    line-height: 130%;
 }
 
 .letsPlayTr {
@@ -109,7 +109,7 @@ span {
 }
 
 .playInfoText {
-    color:yellow; 
+    color:orange; 
     text-shadow: 6px 6px darkred;
 }
 
@@ -117,14 +117,14 @@ span {
     font-size: 190%;
     width: 25%;
     min-width: 175px;
-    background-color: gold;
+    background-color: yellow;
     margin-bottom: 2%;
     cursor: pointer;
 }
 
 .letsPlay:hover .btn {
     width: 35%;
-    min-width: 200px;
+    min-width: 180px;
     transition: 2s;
     border-radius: 150px 150px;
 }
